@@ -1,0 +1,135 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.sound.sampled.SourceDataLine;
+
+class Barang {
+    private String namaBarang;
+    private double hargaBarang;
+
+    public Barang (String namaBarang, double hargaBarang) {
+        this.namaBarang = namaBarang;
+        this.hargaBarang = hargaBarang;
+    }
+
+    public String getnamaBarang() {
+        return namaBarang;
+    }
+
+    public double getHargaBarang() {
+        return hargaBarang;
+    }
+}
+
+class Pembelian {
+    ArrayList<Barang> daftarBarang = new ArrayList<>();
+    ArrayList<Barang> daftarBarangDibeli = new ArrayList<>();
+
+    public void tambahBarang (Barang barang) {
+        daftarBarang.add(barang);
+    }
+
+    public void TransaksiPembelian() {
+        if (daftarBarang.isEmpty()) {
+            System.out.println("Maaf, Silahkan Memilih dengan tepat");
+        } else {
+            System.out.println("Berikut Daftar barangnya :");
+            for ( int i = 0; i < daftarBarang.size(); i++) {
+                Barang barang = daftarBarang.get(i);
+                System.out.println((i + 1) + ". " + barang.getnamaBarang() + " Rp. " + barang.getHargaBarang());
+            }
+            
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Apakah anda ingin melakukan pembelian? (ya/tidak) : ");
+            String pilihan = scanner.nextLine();
+            if (pilihan.equalsIgnoreCase("ya")) {
+                System.out.println("Berapakah jumlah barang yang ingin anda beli? : ");
+                int jumlah = scanner.nextInt();
+                scanner.nextLine(); // disini bertujuan untuk membuang line charakter
+
+                for (int a = 0; a < jumlah; a++ ) {
+                    System.out.println("Masukkan nomor barang yang ingin anda beli : ");
+                    int nomor = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if ( nomor >= 1 && nomor <= daftarBarang.size()) {
+                        Barang barang = daftarBarang.get(nomor - 1);
+                        daftarBarangDibeli.add(barang);
+                        System.out.println(barang.getnamaBarang() + " telah ditambahkan dipembelian anda.");
+                        
+                    } else {
+                        System.out.println("Nomor atau barang tidak ada dalam daftar");
+                    }
+
+                    System.out.println("Silhkan cek total pembelian anda di menu Cek Total Beli Ice Creame.");
+                }
+            } else {
+                System.out.println("Terima kasih telah mengunjungi toko kami");
+            }
+
+            
+        }
+    }
+
+    public void TotalPembelian() {
+        if (daftarBarangDibeli.isEmpty()) {
+            System.out.println("Maaf, Belum ada barang yang dibeli");
+        } else {
+            System.out.println("Barang yang dibeli : ");
+            double total = 0;
+            for (Barang barang : daftarBarangDibeli) {
+                System.out.println(barang.getnamaBarang() + "  Rp. " + barang.getHargaBarang());
+                total += barang.getHargaBarang();
+            }
+            System.out.println("");
+            System.out.println("Total Harga : " + total);
+        }
+    }
+
+    
+}
+
+
+
+
+public class PembelianIceCreame {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Pembelian pembelian = new Pembelian();
+
+        Barang iceCreameCoklat = new Barang("Ice Creame Cokelat", 15000);
+        Barang iceCreameVanila = new Barang("Ice Creame Vanila", 15000);
+        Barang iceCreameDurian = new Barang("Ice Creame Durian", 15000);
+        Barang iceCreameManggis = new Barang("Ice Creame Manggis", 15000);
+
+        pembelian.tambahBarang(iceCreameCoklat);
+        pembelian.tambahBarang(iceCreameVanila);
+        pembelian.tambahBarang(iceCreameDurian);
+        pembelian.tambahBarang(iceCreameManggis);
+
+        boolean isRunning = true;
+
+        while (isRunning) {
+            System.out.println("=========== Program Kasir ===========");
+            System.out.println("|| 1. Mau Beli Ice Creame          ||");
+            System.out.println("|| 2. Cek Total Beli Ice Creame    ||");
+            System.out.println("|| 3. Keluar                       ||");
+            System.out.println("=====================================");
+            System.out.print("Silahkan Pilih Opsi : ");
+            int opsi = scanner.nextInt();
+            scanner.nextLine();
+
+            if (opsi == 1) {
+                pembelian.TransaksiPembelian();
+            } else if (opsi == 2){
+                pembelian.TotalPembelian();
+            } else if (opsi == 3){
+                isRunning = false;
+            } else {
+                System.out.println("opsi tidak valid");
+            }
+        }
+
+        System.out.println("Program Selesai");
+    }
+}
